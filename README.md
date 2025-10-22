@@ -1,14 +1,10 @@
 # Lab3-Analizator_wynikow: Automatyczna Analiza Danych
 
-Ten raport został wygenerowany automatycznie przez GitHub Action.
+Ten raport został wygenerowany automatycznie.
 
-## Etap 1: Eksploracja i Wstępna Analiza Danych
+## Etap 1: Eksploracja danych
 
-### 1.1. Wczytanie danych
-
-Dane zostały wczytane z adresu: `https://vincentarelbundock.github.io/Rdatasets/csv/AER/CollegeDistance.csv`.
-
-Pierwsze 5 wierszy ramki danych:
+Dane wczytane z `https://vincentarelbundock.github.io/Rdatasets/csv/AER/CollegeDistance.csv`:
 ```
           gender ethnicity      score fcollege mcollege home urban  unemp  wage  distance  tuition  education income region
 rownames                                                                                                                   
@@ -19,15 +15,9 @@ rownames
 5         female     other  40.480000       no       no   no   yes    5.6  8.09       0.4  0.88915         13    low  other
 ```
 
-### 1.2. Brakujące wartości
+Suma brakujących wartości: **0**
 
-Suma brakujących wartości w całym zbiorze danych: **0**.
-
-Zbiór danych jest kompletny, nie ma potrzeby imputacji ani usuwania wierszy.
-
-### 1.3. Analiza Statystyczna i Wizualizacje
-
-Podstawowe statystyki dla zmiennych numerycznych:
+Podstawowe statystyki:
 ```
              score        unemp         wage     distance      tuition    education
 count  4739.000000  4739.000000  4739.000000  4739.000000  4739.000000  4739.000000
@@ -40,64 +30,11 @@ min      28.950001     1.400000     6.590000     0.000000     0.257510    12.000
 max      72.809998    24.900000    12.960000    20.000000     1.404160    18.000000
 ```
 
-#### Dystrybucja zmiennej 'score'
 ![Dystrybucja Score](plots\score_distribution.png)
 
-Wykres pokazuje, że rozkład zmiennej `score` jest zbliżony do normalnego, co jest dobrą cechą dla wielu modeli regresyjnych.
-
-#### Macierz korelacji
 ![Macierz Korelacji](plots\correlation_matrix.png)
 
-Z macierzy korelacji widzimy, że zmienne takie jak `education`, `income` i `tuition` mają zauważalną dodatnią korelację ze zmienną `score`. Zmienna `distance` ma słabą ujemną korelację.
-
-## Etap 2: Inżynieria Cech i Przygotowanie Danych
-
-### 2.1. Inżynieria Cech
-
-Zmienne kategoryczne (`gender, ethnicity, fcollege, mcollege, home, urban, income, region`) zostały przekonwertowane na zmienne numeryczne za pomocą techniki One-Hot Encoding. Pozwoli to modelom na ich prawidłową interpretację.
-
-Przykładowe dane po transformacji:
-```
-              score  unemp  wage  distance  tuition  education  gender_male  ethnicity_hispanic  ethnicity_other  fcollege_yes  mcollege_yes  home_yes  urban_yes  income_low  region_west
-rownames                                                                                                                                                                                  
-1         39.150002    6.2  8.09       0.2  0.88915         12         True               False             True          True         False      True       True       False        False
-2         48.869999    6.2  8.09       0.2  0.88915         12        False               False             True         False         False      True       True        True        False
-3         48.740002    6.2  8.09       0.2  0.88915         12         True               False             True         False         False      True       True        True        False
-4         40.400002    6.2  8.09       0.2  0.88915         12         True               False            False         False         False      True       True        True        False
-5         40.480000    5.6  8.09       0.4  0.88915         13        False               False             True         False         False     False       True        True        False
-```
-
-### 2.2. Podział na Zbiór Treningowy i Testowy
-
-Dane zostały podzielone na zbiór treningowy (80%) i testowy (20%) w sposób losowy. Użycie `random_state=42` zapewnia powtarzalność podziału.
-
-### 2.3. Standaryzacja Danych
-
-Zmienne predykcyjne zostały poddane standaryzacji (przeskalowane do średniej 0 i odchylenia standardowego 1). Jest to ważny krok, który poprawia wydajność i stabilność wielu algorytmów, zwłaszcza regresji liniowej.
-
-## Etap 3: Wybór i Trenowanie Modeli
-
-Do zadania predykcji `score` wybrano i wytrenowano trzy różne modele regresyjne, aby porównać ich skuteczność.
-
-Wybrane modele:
-1.  **Regresja Liniowa**: Prosty i interpretowalny model, który stanowi świetny punkt odniesienia (baseline).
-2.  **Lasy Losowe**: Potężny model ensemblowy, odporny na przeuczenie i dobrze radzący sobie z nieliniowymi zależnościami.
-3.  **Gradient Boosting**: Kolejny zaawansowany model ensemblowy, który często osiąga najwyższą dokładność poprzez iteracyjne korygowanie błędów poprzednich drzew.
-
-Model **Regresja Liniowa** został pomyślnie wytrenowany.
-Model **Lasy Losowe** został pomyślnie wytrenowany.
-Model **Gradient Boosting** został pomyślnie wytrenowany.
-
-## Etap 4: Ocena Modeli i Dyskusja o Optymalizacji
-
-### 4.1. Ocena Jakości Modeli
-
-Modele zostały ocenione na zbiorze testowym przy użyciu następujących metryk:
-- **R² (współczynnik determinacji)**: Jak dobrze model wyjaśnia wariancję w danych (im bliżej 1, tym lepiej).
-- **MAE (średni błąd bezwzględny)**: Średnia bezwzględna różnica między prognozą a rzeczywistością (im niżej, tym lepiej).
-- **MSE (błąd średniokwadratowy)**: Średnia kwadratów błędów, mocniej karze duże błędy (im niżej, tym lepiej).
-
-Wyniki oceny modeli na zbiorze testowym:
+## Wyniki oceny modeli
 
 | Model             |       R² |     MAE |     MSE |
 |:------------------|---------:|--------:|--------:|
@@ -105,14 +42,4 @@ Wyniki oceny modeli na zbiorze testowym:
 | Lasy Losowe       | 0.291963 | 5.85546 | 53.6921 |
 | Gradient Boosting | 0.367053 | 5.68634 | 47.9978 |
 
-**Wnioski**: Najlepsze wyniki pod względem metryki R² uzyskał model **Gradient Boosting**. Modele ensemblowe (Lasy Losowe i Gradient Boosting) znacząco przewyższają prostą Regresję Liniową, co sugeruje obecność nieliniowych zależności w danych.
-
-### 4.2. Potencjalna Optymalizacja
-
-Chociaż uzyskane wyniki są dobre, można je dalej poprawić. Kolejnym krokiem byłaby optymalizacja hiperparametrów najlepszego modelu (np. `Gradient Boosting`). Można to osiągnąć za pomocą technik takich jak:
-
-- **Grid Search (Przeszukiwanie siatki)**: Systematyczne testowanie różnych kombinacji hiperparametrów (np. `n_estimators`, `learning_rate`, `max_depth`).
-- **Randomized Search (Przeszukiwanie losowe)**: Bardziej efektywna czasowo alternatywa dla Grid Search, która testuje losowe kombinacje parametrów.
-- **Walidacja krzyżowa (Cross-Validation)**: Użycie jej w trakcie strojenia hiperparametrów zapewnia, że model będzie bardziej odporny na przeuczenie i jego wyniki będą bardziej wiarygodne.
-
-Implementacja tych technik pozwoliłaby na 'dostrojenie' modelu do specyfiki danych i potencjalne uzyskanie jeszcze niższych błędów predykcji.
+Najlepszy model pod względem R²: **Gradient Boosting**.

@@ -1,4 +1,4 @@
-gpandas~=2.0.3
+pandas~=2.0.3
 numpy~=1.24.4
 seaborn~=0.13.2
 matplotlib~=3.7.5
